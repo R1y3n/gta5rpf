@@ -1,0 +1,13 @@
+[project]
+name = "rpfx"
+version = "0.1.0"
+description = "Standalone GTA V RPF7 browser/exporter (xml, dds/png, glb, obj)"
+requires-python = ">=3.9"
+dependencies = ["numpy", "cryptography", "Pillow"]
+license = { text = "GPL-3.0-or-later" }
+
+[project.scripts]
+rpfx = "rpfx.cli:main"
+
+[tool.setuptools.package-data]
+rpfx = ["magic.dat"]
