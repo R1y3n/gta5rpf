@@ -1,6 +1,6 @@
 # rpfx - standalone GTA V RPF browser / exporter (Python)
 
-No .NET, no CodeWalker at runtime. `pip install numpy cryptography Pillow`, then:
+`pip install numpy cryptography Pillow`, then:
 
     python -m rpfx --exe gta5.exe x64a.rpf        # first run scans the exe (~10-60 s), key is cached
     python -m rpfx x64a.rpf                         # later runs use the cached key
