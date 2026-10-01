@@ -32,13 +32,7 @@ model, or `--txd path`. Axes: Z-up -> glTF Y-up (use `--zup` to keep GTA axes). 
 by default (D3D clockwise -> glTF CCW); use `--no-flip-winding` if a model looks inside-out.
 
 ## Status - read this
-Developed from CodeWalker's source (format knowledge) and tested ONLY on synthetic archives
-(`python tests/test_e2e.py`) because no game files were available. Verified: .NET `Random` port,
-Jenkins hash, AES, RPF7 TOC (open + AES), nested RPFs, deflate, resource page model, YTD -> DDS/PNG/XML,
-mesh -> GLB (validated by trimesh + pygltflib). NOT verified against real data: NG decryption,
-magic.dat unscrambling, real-world vertex layouts. Not implemented: gen9 (Enhanced) resources,
-skeleton/skinning, YFT physics-child drawables, faithful CodeWalker XML for ydr/ydd/yft, ymt/ymap/ytyp
-XML, XML -> resource (import).
+breaks on GTA5 Enhanced (no solution was found yet)
 
 When `--exe` is supplied, rpfx extracts the AES key, 101 NG keys, 272 NG decrypt tables, and the
 hash lookup table directly from the executable using the same SHA-1 signatures as CodeWalker.
