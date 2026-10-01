@@ -86,4 +86,5 @@ class DotNetRandom:
         return self.internal_sample()
 
     def next_bytes(self, n: int) -> bytes:
-        return bytes(self.internal_sample() & 0xFF for _ in range(n))
+        # .NET Framework Random.NextBytes uses InternalSample() % 256.
+        return bytes(self.internal_sample() % 256 for _ in range(n))

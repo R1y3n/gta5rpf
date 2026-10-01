@@ -12,6 +12,7 @@ import numpy as np
 
 from .crypto import aes_decrypt, ng_decrypt
 from .hashing import DotNetRandom, joaat, ng_key_index
+from .pc_hashes import LUT_HASH, NG_KEY_HASHES, NG_TABLE_HASHES
 
 # SHA1 of the 32-byte AES key that lives in gta5.exe (legacy build).
 PC_AES_KEY_SHA1 = bytes.fromhex("A0796128A775720AC204D9819F68C172E3952C6D")
@@ -40,6 +41,34 @@ def search_hash(path: str, target_sha1: bytes, length: int = 32,
             if progress:
                 progress(min(1.0, pos / size))
     return None
+
+
+def search_hashes(path: str, targets, length: int,
+                  progress: Optional[Callable[[float], None]] = None):
+    """Find multiple SHA-1-signed byte sequences in one executable scan."""
+    wanted = {}
+    for i, target in enumerate(targets):
+        wanted.setdefault(bytes(target), []).append(i)
+    found = [None] * len(targets)
+    size = os.path.getsize(path)
+    chunk = 1 << 24
+    with open(path, "rb") as f:
+        pos = 0
+        while pos < size:
+            f.seek(pos)
+            buf = f.read(chunk + length)
+            last = min(chunk, len(buf) - length + 1)
+            for i in range(0, max(0, last), 8):
+                digest = hashlib.sha1(buf[i:i + length]).digest()
+                indexes = wanted.get(digest)
+                if indexes is not None:
+                    value = bytes(buf[i:i + length])
+                    for index in indexes:
+                        found[index] = value
+            pos += chunk
+            if progress:
+                progress(min(1.0, pos / size))
+    return found
 
 
 def find_aes_key(exe_path: str, progress=None) -> bytes:
@@ -102,6 +131,12 @@ class Keys:
             k.awc_key = bytes(b[p:p + 16])
         return k
 
+    @classmethod
+    def from_exe(cls, exe_path: str, progress=None):
+        """Extract the AES key and unwrap CodeWalker's NG material blob."""
+        aes_key = find_aes_key(exe_path, progress)
+        return cls.from_aes_key(aes_key)
+
     @property
     def has_ng(self) -> bool:
         return self.ng_keys is not None
@@ -120,11 +155,10 @@ def load_keys(exe: Optional[str] = None, key_b64: Optional[str] = None,
               progress=None, use_cache: bool = True) -> Keys:
     if key_b64:
         key = base64.b64decode(key_b64)
-    else:
-        key = load_cached_key() if use_cache else None
-        if key is None:
-            if not exe:
-                raise RuntimeError("Need --exe gta5.exe or --key <base64> (no cached key).")
-            key = find_aes_key(exe, progress)
-            cache_key(key)
+        return Keys.from_aes_key(key)
+    if exe:
+        return Keys.from_exe(exe, progress)
+    key = load_cached_key() if use_cache else None
+    if key is None:
+        raise RuntimeError("Need --exe gta5.exe or --key <base64> (no cached key).")
     return Keys.from_aes_key(key)

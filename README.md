@@ -2,7 +2,7 @@
 
 `pip install numpy cryptography Pillow`, then:
 
-    python -m rpfx --exe gta5.exe x64a.rpf        # first run scans the exe (~10-60 s), key is cached
+    python -m rpfx --exe gta5.exe x64a.rpf        # extract AES + legacy PC NG material from the exe
     python -m rpfx x64a.rpf                         # later runs use the cached key
     python -m rpfx --key <base64> x64a.rpf          # or pass the AES key directly
     python -m rpfx --print-key --exe gta5.exe       # just extract/cache the key
@@ -40,8 +40,10 @@ magic.dat unscrambling, real-world vertex layouts. Not implemented: gen9 (Enhanc
 skeleton/skinning, YFT physics-child drawables, faithful CodeWalker XML for ydr/ydd/yft, ymt/ymap/ytyp
 XML, XML -> resource (import).
 
-`rpfx/magic.dat` is CodeWalker's data blob (NG keys/tables; needs the AES key from the exe to decode).
-Without it everything except NG-encrypted entries still works.
+When `--exe` is supplied, rpfx extracts the AES key, 101 NG keys, 272 NG decrypt tables, and the
+hash lookup table directly from the executable using the same SHA-1 signatures as CodeWalker.
+`rpfx/magic.dat` remains the fallback for cached keys and `--key`. Builds that do not contain
+those CodeWalker signatures are not supported for NG-encrypted archives.
 
 ## License
 Derived from CodeWalker (GPL-3.0). This project is therefore GPL-3.0-or-later.
