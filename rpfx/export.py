@@ -133,7 +133,7 @@ def export_node(vfs: Vfs, parent_stack: List[Node], node: Node, fmts: List[str],
             else:
                 raise ExportError("%s: format '%s' not available for .ytd (xml, dds, png, raw)" % (e.name, fmt))
             if fmt == "xml" and "dds" not in fmts:
-                # CodeWalker's XML references <name>.dds files; write them beside it
+                # The XML references <name>.dds files; write them beside it
                 os.makedirs(ddsdir, exist_ok=True)
                 for t in texs:
                     try:

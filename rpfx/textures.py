@@ -168,7 +168,7 @@ def _esc(s: str) -> str:
 
 
 def texture_dictionary_xml(textures: List[Texture]) -> str:
-    """Same layout as CodeWalker's YTD XML (1-space indent)."""
+    """Write the established YTD XML layout with one-space indentation."""
     L = ['<?xml version="1.0" encoding="UTF-8"?>']
     if not textures:
         L.append("<TextureDictionary />")

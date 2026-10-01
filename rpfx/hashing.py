@@ -6,7 +6,7 @@ M32 = 0xFFFFFFFF
 
 
 def joaat(data: bytes) -> int:
-    """Raw Jenkins OAAT over bytes (== CodeWalker JenkHash.GenHash(byte[]))."""
+    """Raw Jenkins OAAT hash over bytes."""
     h = 0
     for b in data:
         h = (h + b) & M32

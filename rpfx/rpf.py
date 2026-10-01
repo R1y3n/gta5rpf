@@ -83,7 +83,7 @@ class RpfArchive:
         elif enc == ENC_AES:
             ent, names = self.keys.decrypt_aes(ent), self.keys.decrypt_aes(names)
             self.aes = True
-        else:  # NG or unknown -> assume NG, like CodeWalker
+        else:  # NG or unknown -> assume NG
             ent = self.keys.decrypt_ng(ent, self.name, self.size)
             names = self.keys.decrypt_ng(names, self.name, self.size)
 

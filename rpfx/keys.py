@@ -95,7 +95,7 @@ def load_cached_key() -> Optional[bytes]:
 
 
 def unscramble_magic(blob: bytes, aes_key: bytes) -> bytes:
-    """Reverse of CodeWalker's GenerateMagicData."""
+    """Reverse the archive magic-data transformation."""
     rnd = DotNetRandom(joaat(aes_key))
     n = len(blob)
     rbs = [np.frombuffer(rnd.next_bytes(n), dtype=np.uint8) for _ in range(4)]
@@ -133,7 +133,7 @@ class Keys:
 
     @classmethod
     def from_exe(cls, exe_path: str, progress=None):
-        """Extract the AES key and unwrap CodeWalker's NG material blob."""
+        """Extract the AES key and unwrap the NG material blob."""
         aes_key = find_aes_key(exe_path, progress)
         return cls.from_aes_key(aes_key)
 

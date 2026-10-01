@@ -231,7 +231,7 @@ def write_obj(path: str, drawables: List[DrawableData], lod: str = "high",
 def summary_xml(drawables: List[DrawableData]) -> str:
     from .textures import _esc
     L = ['<?xml version="1.0" encoding="UTF-8"?>',
-         "<!-- rpfx summary: NOT the CodeWalker round-trip format -->", "<DrawableSet>"]
+         "<!-- rpfx summary: not a round-trip resource format -->", "<DrawableSet>"]
     for d in drawables:
         L.append(' <Drawable name="%s">' % _esc(d.name))
         for i, s in enumerate(d.shaders):
